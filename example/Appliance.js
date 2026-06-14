@@ -1,4 +1,4 @@
-```js
+
 // parent class  Appliance.js
 class Appliance {
     constructor(brand, powerRating) {
@@ -27,5 +27,3 @@ const fridge = new Refrigerator("Samsung", 150, 400);
 console.log(fridge.displayDetails());
 
 
-
-```
