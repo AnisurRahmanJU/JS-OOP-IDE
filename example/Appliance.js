@@ -1,4 +1,3 @@
-
 // parent class  Appliance.js
 class Appliance {
     constructor(brand, powerRating) {
