@@ -330,3 +330,22 @@ body {
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-navbar); }
 ::-webkit-scrollbar-thumb { background: var(--border-active); border-radius: 3px; }
+
+/* Footer Styling */
+.footer-custom {
+    background-color: var(--bg-navbar);
+    border-top: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.footer-link {
+    color: var(--text-sidebar);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+    color: #ff9e3b !important; /* Orange hover color */
+    text-decoration: none;
+}
