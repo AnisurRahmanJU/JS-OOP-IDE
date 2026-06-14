@@ -243,3 +243,6 @@ body {
 .footer-content a:hover {
     color: var(--color-console-orange);
 }
+@media (prefers-reduced-motion: reduce) {
+  .console-log.error { animation: none; }
+}
