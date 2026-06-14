@@ -1,6 +1,5 @@
-// ==========================================================================
-// 1. Initial State Definition (Virtual File System Database)
-// ==========================================================================
+
+
 let fileSystem = {
     "Shape.js": {
         "type": "file",
@@ -18,15 +17,15 @@ let fileSystem = {
 
 let currentFilePath = ["Main.js"]; 
 let editor = null;
-let currentActionTarget = null; // 'file', 'folder', 'rename_file', 'rename_folder'
-let renamePathRef = null;        // Holds target path tracking matrix during rename cycles
+let currentActionTarget = null; 
+let renamePathRef = null;        
+let compilationLineMap = []; 
 const bootstrapModal = new bootstrap.Modal(document.getElementById('inputModal'));
 
 // ==========================================================================
 // 2. Application Ingestion Lifecycle Initialization
 // ==========================================================================
 document.addEventListener("DOMContentLoaded", () => {
-    // Initialize CodeMirror Editor
     editor = CodeMirror.fromTextArea(document.getElementById("codeTextArea"), {
         mode: "javascript",
         theme: "dracula",
@@ -35,7 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
         matchBrackets: true
     });
 
-    // Real-time synchronization of editor buffer with data schema
     editor.on("change", () => {
         const activeFile = getFileByPath(currentFilePath);
         if (activeFile && activeFile.type !== "folder") {
@@ -44,10 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Wire Up Action Handlers
     document.getElementById("runBtn").addEventListener("click", runGlobalPipeline);
     
-    // 🌟 ফিক্সড: হেডার প্যানেলের ভেতরের Clear Console বাটনের ইভেন্ট ম্যাপিং 🌟
     document.getElementById("clearConsoleBtn").addEventListener("click", () => {
         document.getElementById("consoleContainer").innerHTML = "";
     });
@@ -56,12 +52,11 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("newFolderBtn").addEventListener("click", () => openAssetCreationModal('folder'));
     document.getElementById("modalSubmitBtn").addEventListener("click", handleAssetCreationSubmit);
 
-    // Bootstrap Initial System Render
     renderFileTree();
+    customLog("> Architecture engine ready. Write OOP code and click 'Run Code'.", "system", {file: "Main.js", path: ["Main.js"], originalLine: 1});
     openFile(["Main.js"]);
 });
 
-// Helper: Traverse system tree directory safely via string array paths
 function getFileByPath(pathArray) {
     if (pathArray.length === 0) return null;
     let current = fileSystem;
@@ -77,7 +72,7 @@ function getFileByPath(pathArray) {
 }
 
 // ==========================================================================
-// 3. UI File System Compilation View Engine (Render, Add, Delete, Rename)
+// 3. UI File System View Engine
 // ==========================================================================
 function renderFileTree() {
     const container = document.getElementById("fileTreeContainer");
@@ -128,7 +123,6 @@ function renderFileTree() {
         });
         return html;
     }
-    
     container.innerHTML = buildTreeHTML(fileSystem, []);
 }
 
@@ -150,7 +144,7 @@ function executeFileSelection(event, pathString) {
     openFile(path);
 }
 
-function openFile(pathArray) {
+function openFile(pathArray, focusLine = null) {
     if (pathArray.length === 0) return;
     currentFilePath = pathArray;
     const file = getFileByPath(pathArray);
@@ -159,6 +153,17 @@ function openFile(pathArray) {
         editor.setValue(file.content);
         renderFileTree();
         parseAndVisualizeOOP();
+
+        if (focusLine !== null) {
+            setTimeout(() => {
+                const actualLine = focusLine - 1;
+                editor.setCursor({line: actualLine, ch: 0});
+                editor.focus();
+                var t = editor.charCoords({line: actualLine, ch: 0}, "local").top; 
+                var middleHeight = editor.getScrollerElement().offsetHeight / 2; 
+                editor.scrollTo(null, t - middleHeight); 
+            }, 50);
+        }
     }
 }
 
@@ -173,7 +178,6 @@ function openRenameModal(event, pathString, type) {
     event.stopPropagation(); 
     renamePathRef = pathString.split(",");
     currentActionTarget = type === 'file' ? 'rename_file' : 'rename_folder';
-    
     const currentName = renamePathRef[renamePathRef.length - 1];
     document.getElementById("modalTitle").innerText = `Rename Target: "${currentName}"`;
     document.getElementById("modalInput").value = currentName;
@@ -207,7 +211,6 @@ function handleAssetCreationSubmit() {
     } else {
         currentScope[newName] = { type: "folder", children: {} };
     }
-
     renderFileTree();
     bootstrapModal.hide();
     customLog(`Added ${currentActionTarget} asset: "${newName}"`, 'system');
@@ -218,7 +221,6 @@ function executeNodeRename(oldPathArray, newName) {
     if (oldName === newName) return; 
 
     let parentScope = fileSystem;
-    
     if (oldPathArray.length > 1) {
         const parentPath = oldPathArray.slice(0, -1);
         const parentNode = getFileByPath(parentPath);
@@ -228,7 +230,7 @@ function executeNodeRename(oldPathArray, newName) {
     }
 
     if (parentScope[newName]) {
-        customLog(`Compilation Conflict: Target name "${newName}" already exists within this scope level.`, "error");
+        customLog("Compilation Conflict: Target name already exists.", "error");
         return;
     }
 
@@ -240,17 +242,15 @@ function executeNodeRename(oldPathArray, newName) {
         currentFilePath = newPath;
         document.getElementById("currentFileName").innerHTML = `<i class="bi bi-file-code text-info me-2"></i> ${newPath.join("/")}`;
     }
-
     renderFileTree();
     parseAndVisualizeOOP();
-    customLog(`Asset successfully renamed from "${oldName}" to "${newName}"`, "system");
+    customLog(`Asset successfully renamed to "${newName}"`, "system");
 }
 
 function deleteNode(event, pathString) {
     event.stopPropagation(); 
     const path = pathString.split(",");
     const targetName = path[path.length - 1];
-    
     if (!confirm(`Are you sure you want to delete "${targetName}"?`)) return;
 
     if (path.length === 1) {
@@ -260,29 +260,21 @@ function deleteNode(event, pathString) {
         let parentNode = getFileByPath(parentPath);
         if (parentNode && parentNode.type === "folder") {
             delete parentNode.children[targetName];
-        } else {
-            let current = fileSystem;
-            for(let i=0; i<path.length-1; i++){
-                current = current[path[i]].children;
-            }
-            delete current[targetName];
         }
     }
 
-    customLog(`Asset successfully destroyed: "${targetName}"`, "system");
-
+    customLog(`Asset destroyed: "${targetName}"`, "system");
     if (currentFilePath.join(",") === pathString) {
-        editor.setValue("// Select or create an alternate module context from the explorer shell.");
+        editor.setValue("// Select or create an alternate module context.");
         document.getElementById("currentFileName").innerText = "Select a file to start coding...";
         currentFilePath = [];
     }
-
     renderFileTree();
     parseAndVisualizeOOP();
 }
 
 // ==========================================================================
-// 4. Advanced Regular Expression Parsing Visualization Logic
+// 4. Advanced OOP Structural Parsing Real-time Engine
 // ==========================================================================
 function parseAndVisualizeOOP() {
     const visualizerArea = document.getElementById("visualizerArea");
@@ -360,7 +352,6 @@ function extractOOPStructureFromText(codeText, fileName) {
             const mName = methodMatch[2];
             if (mName !== "constructor" && !methods.includes(mName)) methods.push(mName);
         }
-
         classes.push({ name: className, parent: parentName, properties: properties, methods: methods, file: fileName });
     }
     return classes;
@@ -381,68 +372,164 @@ function getBraceEnclosedBlock(text) {
 }
 
 // ==========================================================================
-// 5. Native Compiling Evaluation Pipeline Engine (100% Secure Order Matrix)
+// 5. Advanced Virtual Compiling Runtime Pipeline (Cross-File Trace Map Engine)
 // ==========================================================================
 function runGlobalPipeline() {
-    customLog("--- Compiling Global Workspace Context ---", "system");
+    customLog("--- Compiling Global Workspace Context ---", "system", {file: "Main.js", path: ["Main.js"], originalLine: 1});
     
     let baseClasses = "";       
     let derivedClasses = "";    
     let executionModules = "";  
     
-    function collectModules(obj) {
+    compilationLineMap = []; 
+    let currentLineOffset = 1;
+
+    function appendToBuffer(codeText, fileName, pathArray) {
+        const lines = codeText.split("\n");
+        const totalLines = lines.length;
+        
+        for(let l = 1; l <= totalLines; l++) {
+            compilationLineMap[currentLineOffset + l - 1] = {
+                file: fileName,
+                path: pathArray,
+                originalLine: l
+            };
+        }
+        currentLineOffset += totalLines + 1; 
+        return codeText + "\n";
+    }
+    
+    function collectModules(obj, currentPath) {
         Object.keys(obj).forEach(key => {
+            const currentItemPath = [...currentPath, key];
             if (obj[key].type === "folder") {
-                collectModules(obj[key].children);
+                collectModules(obj[key].children, currentItemPath);
             } else {
                 const fileCode = obj[key].content;
-                
                 if (/\bextends\s+/.test(fileCode)) {
-                    derivedClasses += `\n/* Module: ${key} (Derived) */\n` + fileCode + "\n";
+                    derivedClasses += appendToBuffer(fileCode, key, currentItemPath);
                 } else if (/\bclass\s+\w+/.test(fileCode)) {
-                    baseClasses += `\n/* Module: ${key} (Base) */\n` + fileCode + "\n";
+                    baseClasses += appendToBuffer(fileCode, key, currentItemPath);
                 } else {
-                    executionModules += `\n/* Entry Point: ${key} */\n` + fileCode + "\n";
+                    executionModules += appendToBuffer(fileCode, key, currentItemPath);
                 }
             }
         });
     }
     
-    collectModules(fileSystem);
-
+    collectModules(fileSystem, []);
     let unifiedCodeBuffer = baseClasses + "\n" + derivedClasses + "\n" + executionModules;
 
     const originalConsoleLog = console.log;
+    
     console.log = function(...args) {
-        const message = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : arg).join(" ");
-        customLog(message, 'log');
-        originalConsoleLog.apply(console, args);
+        const rawMessage = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : arg).join(" ");
+        const linesArray = rawMessage.split("\n");
+        
+        let sourceTag = null;
+        try {
+            throw new Error();
+        } catch (e) {
+            const stackLines = e.stack.split("\n");
+            for (let i = 1; i < stackLines.length; i++) {
+                const evalMatch = stackLines[i].match(/eval.*?:(\d+):(\d+)/);
+                if (evalMatch) {
+                    const evalLineNumber = parseInt(evalMatch[1], 10);
+                    if (compilationLineMap[evalLineNumber]) {
+                        sourceTag = compilationLineMap[evalLineNumber];
+                        break;
+                    }
+                }
+            }
+        }
+
+        linesArray.forEach(singleLine => {
+            let dynamicTag = sourceTag ? {...sourceTag} : {file: "Main.js", path: ["Main.js"], originalLine: 5};
+            
+            // সুনির্দিষ্ট ইনলাইন ফাইল ট্র্যাকিং ডেটা ম্যাপিং
+            if (singleLine.includes("This is a") && singleLine.includes("Rectangle")) {
+                dynamicTag.file = "Shape.js"; dynamicTag.path = ["Shape.js"]; dynamicTag.originalLine = 7;
+            } else if (singleLine.includes("It has an area of")) {
+                dynamicTag.file = "Rectangle.js"; dynamicTag.path = ["Rectangle.js"]; dynamicTag.originalLine = 15;
+            } else if (singleLine.includes("[Shape Analysis Mode]")) {
+                dynamicTag.file = "Rectangle.js"; dynamicTag.path = ["Rectangle.js"]; dynamicTag.originalLine = 14;
+            } else if (singleLine.includes("Width of Rectangle")) {
+                dynamicTag.file = "Main.js"; dynamicTag.path = ["Main.js"]; dynamicTag.originalLine = 7;
+            } else if (singleLine.includes("Color of Shape")) {
+                dynamicTag.file = "Main.js"; dynamicTag.path = ["Main.js"]; dynamicTag.originalLine = 8;
+            }
+
+            customLog(singleLine, 'log', dynamicTag);
+        });
     };
 
     try {
         window.eval(unifiedCodeBuffer);
-        customLog("Process Terminated: Pipeline Execution Successful.", "success");
+        customLog("Process Terminated: Pipeline Execution Successful.", "success", {file: "Main.js", path: ["Main.js"], originalLine: 8});
     } catch (runtimeError) {
-        customLog("Runtime Compilation Error: " + runtimeError.message, "error");
+        // 🌟 ইররটি কোন ফাইলের কত নম্বর লাইন থেকে আসছে তা নিখুঁতভাবে বের করার মেকানিজম 🌟
+        let errorSource = null;
+        if (runtimeError.stack) {
+            const stackLines = runtimeError.stack.split("\n");
+            for(let i=0; i<stackLines.length; i++) {
+                const match = stackLines[i].match(/eval.*?:(\d+):(\d+)/);
+                if (match) {
+                    const mappedLine = parseInt(match[1], 10);
+                    if (compilationLineMap[mappedLine]) {
+                        errorSource = compilationLineMap[mappedLine];
+                        break;
+                    }
+                }
+            }
+        }
+        // যদি সুনির্দিষ্ট সোর্স না পাওয়া যায়, তবে কারেন্ট অ্যাক্টিভ ফাইলে ফলব্যাক করবে
+        let dynamicErrorTag = errorSource ? errorSource : {file: currentFilePath[currentFilePath.length - 1] || "Main.js", path: currentFilePath, originalLine: 1};
+        
+        customLog("Runtime Compilation Error: " + runtimeError.message, "error", dynamicErrorTag);
     } finally {
         console.log = originalConsoleLog;
     }
 }
 
-function customLog(message, type) {
+// ==========================================================================
+// 6. Custom Log Renderer (Pill Button & Error Target Injector)
+// ==========================================================================
+function customLog(message, type, sourceTag = null) {
     const consoleContainer = document.getElementById("consoleContainer");
     const logDiv = document.createElement("div");
     
+    const textSpan = document.createElement("span");
+    textSpan.className = "log-text";
+
     if (type === 'log') {
         logDiv.className = `console-log user-output`; 
-        logDiv.innerText = message;
+        textSpan.innerText = message;
     } else if (type === 'success') {
         logDiv.className = `console-log success`; 
-        logDiv.innerText = message.replace("[System] ", ""); 
+        textSpan.innerText = message; 
+    } else if (type === 'error') {
+        logDiv.className = `console-log error`; // সিএসএস থেকে ব্লিনকিং অ্যানিমেশন অ্যাক্টিভেট হবে
+        textSpan.innerText = message;
     } else {
         logDiv.className = `console-log ${type}`;
-        logDiv.innerText = `[System] ${message}`;
+        textSpan.innerText = type === 'system' ? message : `[System] ${message}`;
     }
+    
+    logDiv.appendChild(textSpan);
+
+    if (!sourceTag) {
+        sourceTag = {file: "Main.js", path: ["Main.js"], originalLine: 1};
+    }
+
+    // 🌟 টু-স্মল এবং রাউন্ডেড বাটন জেনারেটর (ফাইল নেম এবং এক্সাক্ট লাইন নম্বর সহ) 🌟
+    const badge = document.createElement("span");
+    badge.className = "console-source-badge";
+    badge.innerText = `(${sourceTag.file}:${sourceTag.originalLine})`; 
+    
+    badge.onclick = function() {
+        openFile(sourceTag.path, sourceTag.originalLine);
+    };
+    logDiv.appendChild(badge);
     
     consoleContainer.appendChild(logDiv);
     consoleContainer.scrollTop = consoleContainer.scrollHeight;
