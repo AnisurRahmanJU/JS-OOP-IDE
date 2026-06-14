@@ -1,6 +1,10 @@
+// ==========================================================================
+// 1. JS OOP IDE, Developer: Md. Anisur Rahman
+// ==========================================================================
 
 
-// 1. GLOBAL STATE & FS CONFIGURATION
+
+//  GLOBAL STATE & FS CONFIGURATION
 let fileSystem = {
     "Shape.js": {
         "type": "file",
