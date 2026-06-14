@@ -1,7 +1,7 @@
 /* ==========================================================================
    1. JetBrains Mono Font Ingestion & Design Tokens
    ========================================================================== */
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght=0,300;0,400;0,500;0,600;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
 
 :root {
     --bg-main: #1e1e2e;
@@ -9,7 +9,7 @@
     --bg-navbar: #11111b;
     --bg-card: #252538;
     
-    --bg-header-dark: #0f0f16;     
+    --bg-header-dark: #0f0f16;      
     --text-header-light: #f5e0dc;   
     
     --border-color: #313244;
@@ -17,7 +17,7 @@
     --border-active: #45475a;
 
     --text-main: #cdd6f4;
-    --text-muted: #7f849c;         
+    --text-muted: #7f849c;          
     --text-sidebar: #a6adc8;
 
     /* OOP Visualizer Tokens */
@@ -177,7 +177,7 @@ body {
 .console-source-badge {
     cursor: pointer;
     font-size: 9.5px !important;   
-    padding: 0px 6px !important;    
+    padding: 0px 6px !important;   
     border-radius: 20px !important; 
     margin-left: 6px; 
     display: inline-flex;
@@ -186,7 +186,7 @@ body {
     white-space: nowrap;
     user-select: none;
     font-weight: 600;
-    height: 16px;                   
+    height: 16px;                  
     transition: all 0.12s ease;
 }
 
