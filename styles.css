@@ -1,6 +1,7 @@
 /* ==========================================================================
    1. JetBrains Mono Font Ingestion & Design Tokens
    ========================================================================== */
+
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
 
 :root {
@@ -8,17 +9,15 @@
     --bg-sidebar: #181825;
     --bg-navbar: #11111b;
     --bg-card: #252538;
-    
-    --bg-header-dark: #0f0f16;      
-    --text-header-light: #f5e0dc;   
-    
+    --bg-header-dark: #0f0f16;
+    --text-header-light: #f5e0dc;
     --border-color: #313244;
     --border-focus: #89b4fa;
     --border-active: #45475a;
-
     --text-main: #cdd6f4;
-    --text-muted: #7f849c;          
+    --text-muted: #7f849c;
     --text-sidebar: #a6adc8;
+    --text-white: #ffffff;
 
     /* OOP Visualizer Tokens */
     --color-class: #fab387;
@@ -29,57 +28,17 @@
     /* Console Custom Color Palette */
     --color-error: #f38ba8;
     --color-system: #89b4fa;
-    --color-console-orange: #ff9e3b;    
-    --color-system-white: #ffffff;      
-    
+    --color-console-orange: #ff9e3b;
     --font-global: 'JetBrains Mono', monospace;
-}
-
-/* ==========================================================================
-   Small Console Clear Button Styling
-   ========================================================================== */
-.btn-console-clear {
-    background: transparent !important;
-    border: 1px solid var(--border-color) !important;
-    color: var(--text-muted) !important;
-    font-size: 10px !important;
-    padding: 2px 8px !important;
-    border-radius: 4px !important;
-    transition: all 0.2s ease;
-}
-
-.btn-console-clear:hover {
-    background: var(--color-error) !important;
-    color: #ffffff !important;
-    border-color: var(--color-error) !important;
 }
 
 /* ==========================================================================
    2. Global Typography & Layout Reset
    ========================================================================== */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: var(--font-global) !important; 
-}
-
-body {
-    background-color: var(--bg-main);
-    color: var(--text-main);
-    overflow-y: auto; 
-    width: 100%;
-}
-
-.navbar {
-    background-color: var(--bg-navbar);
-    border-bottom: 1px solid var(--border-color);
-    padding: 10px 15px;
-}
-
-.main-container {
-    padding: 15px;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-global) !important; }
+body { background-color: var(--bg-main); color: var(--text-main); overflow-y: auto; width: 100%; }
+.navbar { background-color: var(--bg-navbar); border-bottom: 1px solid var(--border-color); padding: 10px 15px; }
+.main-container { padding: 15px; }
 
 /* ==========================================================================
    3. Column Containers
@@ -107,290 +66,111 @@ body {
     align-items: center;
 }
 
-.sidebar-header span, .console-header span {
-    color: var(--text-header-light) !important;
-    font-weight: bold;
-}
-
+.sidebar-header span, .console-header span { color: var(--text-header-light) !important; font-weight: bold; }
 .editor-header span { color: #89b4fa !important; }
 .panel-header span { color: #a6e3a1 !important; }
 
 /* ==========================================================================
-   4. CodeMirror Code Editor Custom Rules
+   4. CodeMirror & Terminal Console
    ========================================================================== */
-.CodeMirror {
-    background: var(--bg-main) !important;
-    color: var(--text-main) !important;
-    height: 380px !important; 
-    font-size: 14px !important;
-    border-bottom: 1px solid var(--border-color);
-}
+.CodeMirror { background: var(--bg-main) !important; color: var(--text-main) !important; height: 380px !important; font-size: 14px !important; border-bottom: 1px solid var(--border-color); }
+.CodeMirror-gutter { background: var(--bg-sidebar) !important; border-right: 1px solid var(--border-color) !important; }
+.CodeMirror-linenumber { color: var(--text-muted) !important; }
 
-.CodeMirror-gutter {
-    background: var(--bg-sidebar) !important;
-    border-right: 1px solid var(--border-color) !important;
-}
+.console-area { height: 220px; background-color: var(--bg-navbar); font-size: 13px; padding: 12px; overflow: auto; white-space: nowrap; display: flex; flex-direction: column; }
+.console-log { margin-bottom: 6px; border-bottom: 1px solid rgba(49, 50, 68, 0.2); padding-bottom: 4px; display: flex; align-items: center; min-width: 100%; width: max-content; }
+.console-log.user-output { color: var(--color-console-orange) !important; }
+.console-log.system { color: var(--color-system) !important; }
+.console-log.error { color: var(--color-error) !important; border-left: 3px solid var(--color-error); padding-left: 6px; background: rgba(243, 139, 168, 0.04); animation: errorBlink 1s ease-in-out infinite; }
+.console-log.success { color: #a6e3a1 !important; font-weight: 600; }
+@keyframes errorBlink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
-.CodeMirror-linenumber {
-    color: var(--text-muted) !important;
-}
+.btn-console-clear { background: transparent !important; border: 1px solid var(--border-color) !important; color: var(--text-muted) !important; font-size: 10px !important; padding: 2px 8px !important; border-radius: 4px !important; transition: all 0.2s ease; }
+.btn-console-clear:hover { background: var(--color-error) !important; color: #ffffff !important; border-color: var(--color-error) !important; }
 
 /* ==========================================================================
-   5. Terminal Sandbox Console Component (Horizontal Scroll Enabled)
+   5. OOP Visualizer & Right Panel
    ========================================================================== */
-.console-area {
-    height: 220px; 
-    background-color: var(--bg-navbar);
-    font-size: 13px;
-    padding: 12px;
-    overflow-x: auto; /* হরাইজন্টাল স্ক্রল নিশ্চিত করে */
-    overflow-y: auto; 
-    white-space: nowrap; /* টেক্সট যাতে ব্রেক না হয় */
-    display: flex;
-    flex-direction: column;
-}
-
-.console-log {
-    margin-bottom: 6px;
-    white-space: nowrap; /* টেক্সট এক লাইনে রাখার জন্য */
-    border-bottom: 1px solid rgba(49, 50, 68, 0.2);
-    padding-bottom: 4px;
-    line-height: 1.5;
-    display: flex;
-    align-items: center;
-    width: max-content; /* কনটেন্টের আকার অনুযায়ী চওড়া হবে */
-    min-width: 100%;    /* যদি কনটেন্ট কম থাকে তবে পুরো উইডথ নেবে */
-}
-
-.log-text {
-    display: inline-block;
-    white-space: nowrap; /* এখানেও nowrap দিন */
-}
-
-.console-log.user-output {
-    color: var(--color-console-orange) !important;
-}
-
-.console-log.system { 
-    color: var(--color-system) !important; 
-}
-
-/* ব্লিনকিং অ্যানিমেশন সহ কাস্টম ইরর টেক্সট */
-@keyframes errorBlink {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
-}
-
-.console-log.error {
-    color: var(--color-error) !important;
-    border-left: 3px solid var(--color-error);
-    padding-left: 6px;
-    background: rgba(243, 139, 168, 0.04);
-    animation: errorBlink 1s ease-in-out infinite; 
-}
-
-.console-log.success { 
-    color: #a6e3a1 !important; 
-    font-weight: 600;
-}
-
-.log-text {
-    word-break: break-all;
-    display: inline; 
-}
-
-/* ==========================================================================
-   6. Custom Small Pill Badge Buttons (Dynamic Color Mapping System)
-   ========================================================================== */
-.console-source-badge {
-    cursor: pointer;
-    font-size: 9.5px !important;   
-    padding: 0px 6px !important;   
-    border-radius: 20px !important; 
-    margin-left: 6px; 
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    white-space: nowrap;
-    user-select: none;
-    font-weight: 600;
-    height: 16px;                  
-    transition: all 0.12s ease;
-}
-
-/* 🌟 ১. নরমাল ইউজার আউটপুট বাটনের ডিজাইন (Beautiful Orange Variant) 🌟 */
-.user-output .console-source-badge {
-    color: var(--color-console-orange) !important;
-    background: rgba(255, 158, 59, 0.06) !important;
-    border: 1px solid rgba(255, 158, 59, 0.3) !important;
-}
-
-.user-output .console-source-badge:hover {
-    color: #11111b !important;
-    background: var(--color-console-orange) !important;
-    border-color: var(--color-console-orange) !important;
-    transform: scale(1.04);
-}
-
-/* 🌟 ২. রানটাইম ইরর বাটনের ডিজাইন (Blinking Error Color Match) 🌟 */
-.error .console-source-badge {
-    color: var(--color-error) !important;
-    background: rgba(243, 139, 168, 0.08) !important;
-    border: 1px solid rgba(243, 139, 168, 0.3) !important;
-}
-
-.error .console-source-badge:hover {
-    color: #11111b !important;
-    background: var(--color-error) !important;
-    border-color: var(--color-error) !important;
-    transform: scale(1.04);
-}
-
-/* ৩. সিস্টেম ও সাকসেস মেসেজ বাটন ফলব্যাক (Soft Theme) */
-.system .console-source-badge, .success .console-source-badge {
-    color: var(--text-sidebar) !important;
-    background: #313244 !important;
-    border: 1px solid #45475a !important;
-}
-
-.system .console-source-badge:hover, .success .console-source-badge:hover {
-    color: #ffffff !important;
-    border-color: var(--border-focus) !important;
-}
-
-/* ==========================================================================
-   7. Left Directory Workspace Explorer Tree
-   ========================================================================== */
-.file-tree {
-    max-height: 350px;
-    overflow-y: auto;
-    padding: 12px;
-}
-
-.tree-item {
-    cursor: pointer;
-    padding: 6px 8px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: var(--text-sidebar);
-    font-size: 13px;
-}
-
-.tree-item:hover {
-    background-color: rgba(69, 71, 90, 0.3);
-}
-
-.tree-item.active {
-    background-color: var(--border-active);
-    color: var(--border-focus);
-}
-
-.tree-folder-content {
-    margin-left: 12px;
-    border-left: 1px dashed var(--border-active);
-    padding-left: 6px;
-}
-
-.tree-actions {
-    display: flex;
-    gap: 12px;
-    opacity: 0.25; 
-}
-
-.tree-item:hover .tree-actions {
-    opacity: 0.85; 
-}
-
-.custom-action-btn {
-    cursor: pointer;
-    color: #bac2de !important; 
-    font-size: 13px;
-}
-
-/* ==========================================================================
-   8. Right Panel Blueprint Map Component (Visualizer)
-   ========================================================================== */
-.visualizer-area {
-    background-color: var(--bg-main);
-    min-height: 350px;
-    max-height: 600px;
-    overflow-y: auto; 
-    padding: 12px;
-}
-
-.oop-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    padding: 12px;
-    margin-bottom: 12px;
-}
-
-.oop-class-name {
-    font-weight: 600;
-    color: var(--color-class);
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 5px;
-    margin-bottom: 6px;
-    font-size: 14px;
-}
-
-.oop-extends {
-    font-size: 11px;
-    color: var(--color-extends);
-    font-style: italic;
-}
-
-.oop-item { font-size: 12px; padding: 3px 0; }
+.visualizer-area { background-color: var(--bg-main); min-height: 350px; max-height: 600px; overflow-y: auto; padding: 12px; }
+.oop-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; margin-bottom: 16px; transition: transform 0.2s; }
+.oop-class-name { font-weight: 600; color: var(--color-class); border-bottom: 1px solid var(--border-color); padding-bottom: 8px; margin-bottom: 8px; font-size: 14px; display: flex; justify-content: space-between; }
+.oop-extends { font-size: 11px; color: var(--color-extends); font-style: italic; }
+.constructor-badge { font-size: 10px; color: var(--text-muted); margin-bottom: 6px; display: block; background: rgba(0,0,0,0.1); padding: 2px 5px; border-radius: 3px; }
+.oop-item { font-size: 12px; padding: 3px 0; display: flex; align-items: center; }
 .oop-method { color: var(--color-method); }
 .oop-prop { color: var(--color-prop); }
+.override-tag { font-size: 9px; color: var(--color-error); background: rgba(243, 139, 168, 0.15); padding: 1px 4px; border-radius: 3px; margin-left: 5px; font-weight: bold; }
+.empty-state { text-align: center; color: var(--text-muted); padding: 40px 10px; font-size: 13px; }
 
-.empty-state {
-    text-align: center;
-    color: var(--text-muted);
-    padding: 40px 10px;
-    font-size: 13px;
-}
+/* ==========================================================================
+   6. Workspace Explorer Tree
+   ========================================================================== */
+.file-tree { max-height: 350px; overflow-y: auto; padding: 12px; }
+.tree-item { cursor: pointer; padding: 6px 8px; border-radius: 4px; display: flex; align-items: center; justify-content: space-between; color: var(--text-sidebar); font-size: 13px; }
+.tree-item:hover { background-color: rgba(69, 71, 90, 0.3); }
+.tree-item.active { background-color: var(--border-active); color: var(--border-focus); }
 
-/* Webkit Engine Layout Scrollbar System */
+/* File Actions - White Text Requirement */
+.custom-action-btn { cursor: pointer; color: var(--text-white) !important; font-size: 13px; opacity: 0.7; }
+.custom-action-btn:hover { opacity: 1; color: var(--color-error) !important; }
+.tree-actions { display: flex; gap: 12px; opacity: 0.25; }
+.tree-item:hover .tree-actions { opacity: 0.85; }
+
+/* ==========================================================================
+   7. System Scrollbars & Footer
+   ========================================================================== */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-navbar); }
 ::-webkit-scrollbar-thumb { background: var(--border-active); border-radius: 3px; }
 
-.footer {
-    width: 100%;
-    padding: 20px 0;
-    margin-top: 20px;
-    border-top: 1px solid var(--border-color);
-    background: var(--bg-navbar);
-    color: var(--text-muted);
-    font-size: 11px;
-    letter-spacing: 0.5px;
+.footer { width: 100%; padding: 20px 0; margin-top: 20px; border-top: 1px solid var(--border-color); background: var(--bg-navbar); color: var(--text-muted); font-size: 11px; text-transform: uppercase; }
+.footer-content { display: flex; justify-content: center; align-items: center; gap: 15px; }
+.footer-content a { text-decoration: none; color: inherit; transition: all 0.3s ease; border-bottom: 1px solid transparent; }
+.footer-content a:hover { color: var(--color-console-orange); border-bottom: 1px solid var(--color-console-orange); }
+/* ==========================================================================
+   8. OOP Visualizer - Updated Badge System
+   ========================================================================== */
+
+/* ওভাররাইড ব্যাজ (পুরানো স্টাইল) */
+.override-tag {
+    font-size: 8px;
+    background: rgba(243, 139, 168, 0.2);
+    color: #f38ba8;
+    padding: 1px 4px;
+    border-radius: 3px;
+    margin-left: 5px;
+    font-weight: bold;
     text-transform: uppercase;
+    border: 1px solid rgba(243, 139, 168, 0.3);
 }
 
-.footer-content {
+/* Async ব্যাজ (নীল রঙের থিম) */
+.async-tag {
+    font-size: 8px;
+    background: rgba(137, 180, 250, 0.2);
+    color: #89b4fa;
+    padding: 1px 4px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    border: 1px solid rgba(137, 180, 250, 0.3);
+}
+
+/* Try-Catch ব্যাজ (কমলা/হলুদ রঙের থিম) */
+.catch-tag {
+    font-size: 8px;
+    background: rgba(255, 158, 59, 0.2);
+    color: #ff9e3b;
+    padding: 1px 4px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    border: 1px solid rgba(255, 158, 59, 0.3);
+}
+
+/* মেথড আইটেমের জন্য একটু স্পেসিং */
+.oop-method {
     display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 15px;
-}
-
-.footer-content a {
-    text-decoration: none;
-    color: inherit;
-    transition: all 0.3s ease;
-    border-bottom: 1px solid transparent;
-}
-
-.footer-content a:hover {
-    color: var(--color-console-orange);
-    border-bottom: 1px solid var(--color-console-orange);
-}
-
-.footer .sep {
-    color: var(--border-color);
+    flex-wrap: wrap; /* যদি অনেক ব্যাজ থাকে তবে নিচে নেমে যাবে */
+    gap: 4px;
+    margin-bottom: 4px;
 }
