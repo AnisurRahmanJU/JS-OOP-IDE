@@ -36,7 +36,7 @@ class Rectangle extends Shape {
     }
 
     getArea() {
-        return this.#width * this.#height;
+        return this.#width * this._height;
     }
 
     displayDetails() {
