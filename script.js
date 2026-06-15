@@ -64,6 +64,8 @@ class Rectangle extends Shape {
     "Main.js": {
         "type": "file",
         "content": `// Load dependencies first
+eval(fileSystem["Shape.js"].content);
+eval(fileSystem["Rectangle.js"].content);
 
 console.log("Executing Shape & Rectangle OOP Flow: ");
 
@@ -73,9 +75,7 @@ console.log(myBox.displayDetails());
 console.log("\\nTesting Direct Instance Property State:");
 console.log("Width of Rectangle:", myBox.width);
 console.log("Color of Shape:", myBox.color);`
-     
     }
-
 };
 
 
