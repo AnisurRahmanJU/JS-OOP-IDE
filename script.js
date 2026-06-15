@@ -28,7 +28,7 @@ class Rectangle extends Shape {
     constructor(color, width, height) {
         super("Rectangle", color);
         this.#width = width;
-        this.#height = height;
+        this._height = height;
     }
 
     get width() {
