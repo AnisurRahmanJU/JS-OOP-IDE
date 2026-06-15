@@ -23,7 +23,7 @@ class Shape {
         "content": `// Child Class: Rectangle.js 
 class Rectangle extends Shape {
     #width;
-    #height;
+    _height;
 
     constructor(color, width, height) {
         super("Rectangle", color);
