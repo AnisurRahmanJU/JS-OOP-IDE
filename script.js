@@ -13,9 +13,10 @@ let fileSystem = {
     },
     "Main.js": {
         "type": "file",
-        "content": `// Main.js\nconsole.log("Executing Shape & Rectangle OOP Flow: ");\n\n// Initialize the child class instance with custom dimensions\nconst myBox = new Rectangle("Neon Blue", 10, 5);\nconsole.log(myBox.displayDetails());\n\nconsole.log("\\nTesting Direct Instance Property State:");\nconsole.log("Width of Rectangle (Public):", myBox.width);\nconsole.log("Color of Shape (Public Getter):", myBox.color);\n\n// Check property behavior to test encapsulation privacy\nconsole.log("Attempting to access private area directly:", myBox.area);`
+        "content": `// Class definitions must be evaluated before instantiation\n// Initialize the child class instance with custom dimensions\nconst myBox = new Rectangle("Neon Blue", 10, 5);\nconsole.log(myBox.displayDetails());\n\nconsole.log("\\nTesting Direct Instance Property State:");\nconsole.log("Width of Rectangle (Public):", myBox.width);\nconsole.log("Color of Shape (Public Getter):", myBox.color);\n\n// Check property behavior to test encapsulation privacy\nconsole.log("Attempting to access private area directly:", myBox.area);`
     }
 };
+
 
 
 let currentFilePath = ["Main.js"]; 
