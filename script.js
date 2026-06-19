@@ -50,7 +50,7 @@ class Rectangle extends Shape {
         "type": "file",
         "content": `// import { Shape } from 'import link use/Shape.js';
 // import { Rectangle } from 'import link use/Rectangle.js';
-\n\n// Main.js -> Main Function
+\n\n// Main.js -> Main Function, We don't use import/export file
 console.log("Executing Shape & Rectangle OOP Flow: ");
 
 const myBox = new Rectangle("Neon Blue", 10, 5);
