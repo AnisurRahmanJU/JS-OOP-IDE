@@ -49,7 +49,7 @@ class Rectangle extends Shape {
     "Main.js": {
         "type": "file",
         "content": `// import { Shape } from 'import link use/Shape.js';
-\n// import { Rectangle } from 'import link use/Rectangle.js';
+// import { Rectangle } from 'import link use/Rectangle.js';
 \n\n// Main.js -> Main Function
 console.log("Executing Shape & Rectangle OOP Flow: ");
 
